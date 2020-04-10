@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="270.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dairy.view.controllers.ControllerEditActions">
+   <children>
+      <Button fx:id="buttonCancel" layoutX="80.0" layoutY="361.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" AnchorPane.bottomAnchor="5.0" />
+      <Button fx:id="buttonAccept" layoutX="142.0" layoutY="361.0" mnemonicParsing="false" onAction="#accept" text="Accept" AnchorPane.bottomAnchor="5.0" />
+      <TableView fx:id="tableViewActions" layoutX="14.0" layoutY="14.0" prefHeight="251.0" prefWidth="264.0" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+        <columns>
+          <TableColumn fx:id="tableColumnActions" prefWidth="254.0" text="Actions" />
+        </columns>
+      </TableView>
+      <TextField fx:id="textFieldNewAction" layoutY="263.0" prefHeight="25.0" prefWidth="195.0" promptText="Name for new action" AnchorPane.bottomAnchor="95.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="70.0" />
+      <Button fx:id="buttonAdd" layoutX="219.0" layoutY="263.0" mnemonicParsing="false" onAction="#addAction" prefHeight="25.0" prefWidth="60.0" text="Add" AnchorPane.bottomAnchor="95.0" AnchorPane.rightAnchor="5.0" />
+      <Button fx:id="buttonRemoveAction" layoutY="294.0" mnemonicParsing="false" onAction="#removeAction" prefHeight="25.0" prefWidth="264.0" text="Remove selected action" AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" />
+      <Button fx:id="buttonRenameAction" layoutX="205.0" layoutY="327.0" mnemonicParsing="false" onAction="#renameAction" prefWidth="60.0" text="Rename" AnchorPane.bottomAnchor="35.0" AnchorPane.rightAnchor="5.0" />
+      <TextField fx:id="textFieldRenameAction" layoutY="327.0" prefHeight="25.0" prefWidth="195.0" promptText="Name for selected action" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="70.0" />
+   </children>
+</AnchorPane>

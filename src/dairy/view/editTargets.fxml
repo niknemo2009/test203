@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="270.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dairy.view.controllers.ControllerEditTargets">
+   <children>
+      <TableView fx:id="tableViewTargets" editable="true" layoutX="14.0" layoutY="14.0" prefHeight="130.0" prefWidth="203.0" AnchorPane.bottomAnchor="155.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+         <columns>
+            <TableColumn fx:id="tableTargetsColumnTarget" prefWidth="192.0" text="Target" />
+            <TableColumn fx:id="tableTargetsColumnTimeLeft" prefWidth="62.0" text="Time left" />
+         </columns>
+      </TableView>
+      <Button fx:id="buttonRemoveTarget" layoutX="16.0" layoutY="212.0" mnemonicParsing="false" onAction="#removeTarget" prefHeight="25.0" prefWidth="210.0" text="Remove selected target" AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" />
+      <Button fx:id="buttonSetTime" layoutX="174.0" layoutY="179.0" mnemonicParsing="false" onAction="#setTimeOnTarget" prefHeight="25.0" prefWidth="60.0" text="Set" AnchorPane.bottomAnchor="95.0" AnchorPane.rightAnchor="5.0" />
+      <TextField fx:id="textFieldSetTime" layoutX="5.0" layoutY="183.0" prefHeight="25.0" prefWidth="195.0" promptText="Set time on selected target" AnchorPane.bottomAnchor="95.0" AnchorPane.leftAnchor="5.0" />
+      <Button fx:id="buttonAddTarget" layoutX="114.0" layoutY="161.0" mnemonicParsing="false" onAction="#addTarget" prefHeight="25.0" prefWidth="60.0" text="Add" AnchorPane.bottomAnchor="125.0" AnchorPane.rightAnchor="5.0" />
+      <TextField fx:id="textFieldNewTarget" layoutX="16.0" layoutY="157.0" prefHeight="25.0" prefWidth="195.0" promptText="Name for new target" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="5.0" />
+      <TextField fx:id="textFieldRenameTarget" layoutX="14.0" layoutY="258.0" prefHeight="25.0" prefWidth="195.0" promptText="Name for selected action" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="5.0" />
+      <Button fx:id="buttonRenameTarget" layoutX="219.0" layoutY="258.0" mnemonicParsing="false" onAction="#renameTarget" prefWidth="60.0" text="Rename" AnchorPane.bottomAnchor="35.0" AnchorPane.rightAnchor="5.0" />
+      <Button fx:id="buttonAccept" layoutX="141.0" layoutY="361.0" mnemonicParsing="false" onAction="#accept" text="Accept" AnchorPane.bottomAnchor="5.0" />
+      <Button fx:id="buttonCancel" layoutX="79.0" layoutY="361.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" AnchorPane.bottomAnchor="5.0" />
+   </children>
+</AnchorPane>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.scene.media.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="351.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dairy.view.controllers.ControllerCoefficients">
+   <children>
+      <Button fx:id="buttonAccept" layoutX="181.0" layoutY="370.0" mnemonicParsing="false" onAction="#accept" prefWidth="55.0" text="Accept" AnchorPane.bottomAnchor="5.0" />
+      <TableView fx:id="tableViewSelectedCoefs" layoutX="14.0" layoutY="31.0" prefHeight="300.0" prefWidth="260.0" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="25.0">
+        <columns>
+          <TableColumn fx:id="tableColumnAction" prefWidth="256.0" text="Action" />
+          <TableColumn fx:id="tableColumnCoefficient" minWidth="0.0" prefWidth="74.0" text="Coefficient" />
+        </columns>
+      </TableView>
+      <Label fx:id="labelSelectedTarget" layoutX="14.0" layoutY="14.0" text="Selected target - " AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+      <TextField fx:id="textFieldSetCoefficient" layoutY="333.0" prefHeight="25.0" prefWidth="195.0" promptText="Set in interval from 0.0 to 1.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="70.0" />
+      <Button fx:id="buttonSetCoefficient" layoutX="200.0" layoutY="333.0" mnemonicParsing="false" onAction="#setCoefficient" prefHeight="25.0" prefWidth="60.0" text="Set" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="5.0" />
+      <Button fx:id="buttonCancel" layoutX="116.0" layoutY="370.0" mnemonicParsing="false" onAction="#cancel" prefWidth="55.0" text="Cancel" AnchorPane.bottomAnchor="5.0" />
+   </children>
+</AnchorPane>

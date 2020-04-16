@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Dairy">
+    <output-path>$PROJECT_DIR$/out/artifacts/Dairy</output-path>
+    <root id="archive" name="Dairy.jar" />
+  </artifact>
+</component>

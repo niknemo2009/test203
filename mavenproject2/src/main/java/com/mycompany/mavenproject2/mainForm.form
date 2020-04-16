@@ -255,11 +255,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="&lt;&lt; PreviousSector"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="PreviousSector_ButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="NextSecror_Button">
       <Properties>
         <Property name="text" type="java.lang.String" value="NextSector&gt;&gt;"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="NextSecror_ButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

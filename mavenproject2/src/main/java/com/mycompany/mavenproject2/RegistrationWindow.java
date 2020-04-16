@@ -345,7 +345,7 @@ public class RegistrationWindow extends javax.swing.JFrame {
                 && StopDateCorr_CheckBox.isSelected() && OwnerCorr_CheckBox.isSelected()) {
             var parking1 = mainForm.ListOfParking.get(mainForm.SelectingParkingIndex);
            
-            var place1 = parking1.TerminalSession().RegisterNewCar(
+            var place1 = parking1.TerminalSession().RegisterNewCar(mainForm.SelectParkingName ,
                     ParkingSector_ComboBox.getSelectedItem().toString().charAt(0),
                     Integer.parseInt( mainForm.PushedButtonText),
                     new Car(CarModel_ComboBox.getSelectedItem().toString(), 

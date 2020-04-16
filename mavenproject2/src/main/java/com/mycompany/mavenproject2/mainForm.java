@@ -33,9 +33,13 @@ public class mainForm extends javax.swing.JFrame {
     public static String PushedButtonText;
     public static RegistrationWindow Registration_window;
     public static JButton PushedButton;
+    public  static String SelectParkingName;
     DefaultListModel model;
     List<JButton[][]> buttonSets;
     List<String[]> WidthsAndHeigths;
+    char CurrentSectorGlobalName;
+    int CurrentSectorGlobalCounter;
+    int ParkingSectorCount = 1;
 
     public mainForm() {
         initComponents();
@@ -45,6 +49,8 @@ public class mainForm extends javax.swing.JFrame {
         WidthsAndHeigths = new LinkedList<>();
         PreviousSector_Button.setVisible(false);
         NextSecror_Button.setVisible(false);
+        CurrentSectorGlobalName = 'A';
+        CurrentSectorGlobalCounter = 0;
     }
 
     /**
@@ -131,8 +137,18 @@ public class mainForm extends javax.swing.JFrame {
         ParkingLots_Label.setText("already built parking lots:");
 
         PreviousSector_Button.setText("<< PreviousSector");
+        PreviousSector_Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PreviousSector_ButtonActionPerformed(evt);
+            }
+        });
 
         NextSecror_Button.setText("NextSector>>");
+        NextSecror_Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NextSecror_ButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -242,18 +258,20 @@ ActionListener ParkingCarListener = new ActionListener() {
         }
     };
 
-    int ParkingSectorCount = 1;
+
     private void CreateParking_jButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateParking_jButtonActionPerformed
         try {
             String parkingWidth = ParkingSize_TextField.getText();
             String parkingHeigth = parkingWidth;
             String SectorsCount = SectorsCount_TextField.getText();
             String parkingName = ParkingName_TextF.getText();
-            WidthsAndHeigths.add(new String[2]);
+            SelectParkingName = parkingName;
+
             if (parkingWidth != null && SectorsCount != null && parkingName != "" && parkingName != null) {
 
                 if (parkingWidth.matches("[1-5]{1,1}") && parkingName.matches("[a-zA-Z1-9]{4,15}") && Integer.parseInt(SectorsCount) < 26) {
                     if (!model.contains(parkingName)) {
+                        WidthsAndHeigths.add(new String[2]);
                         WidthsAndHeigths.get(WidthsAndHeigths.size() - 1)[0] = parkingWidth;
                         WidthsAndHeigths.get(WidthsAndHeigths.size() - 1)[1] = parkingHeigth;
                         ParkingSectorCount = Integer.parseInt(SectorsCount);
@@ -284,8 +302,35 @@ ActionListener ParkingCarListener = new ActionListener() {
 
     private void ParkingLots_ListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ParkingLots_ListMouseClicked
         // CurrentParkingInfo_TextArea.append("\n"+ ParkingLots_List.getSelectedIndex());
+           SelectParkingName = ParkingLots_List.getSelectedValue();
         RedrawParking(false);
+     
     }//GEN-LAST:event_ParkingLots_ListMouseClicked
+
+    private void NextSecror_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NextSecror_ButtonActionPerformed
+        if (CurrentSectorGlobalCounter < ListOfParking.get(ParkingLots_List.getSelectedIndex()).ParkObj_sectorCount) {
+            CurrentSectorGlobalCounter++;
+            CurrentSectorGlobalName++;
+        } else {
+            NextSecror_Button.setVisible(false);
+        }
+
+        PreviousSector_Button.setVisible(true);
+        RedrawParking(false);
+
+    }//GEN-LAST:event_NextSecror_ButtonActionPerformed
+
+    private void PreviousSector_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PreviousSector_ButtonActionPerformed
+        if (CurrentSectorGlobalCounter > 0) {
+            CurrentSectorGlobalCounter--;
+            CurrentSectorGlobalName--;
+        }
+        if (CurrentSectorGlobalCounter == 0) {
+            PreviousSector_Button.setVisible(false);
+        }
+        NextSecror_Button.setVisible(true);
+        RedrawParking(false);
+    }//GEN-LAST:event_PreviousSector_ButtonActionPerformed
 
     private void RedrawParking(Boolean flag) {
         int placeNumber = 1;
@@ -298,6 +343,7 @@ ActionListener ParkingCarListener = new ActionListener() {
             parkingWidth = Integer.parseInt(ParkingSize_TextField.getText());
             parkingHeigth = parkingWidth;
             ParkingGlobalSectorName = ParkingName_TextF.getText();
+            buttonSets.add(new JButton[parkingHeigth][parkingWidth]);
         } else {
             SelectingParkingIndex = ParkingLots_List.getSelectedIndex();
             parkingHeigth = Integer.parseInt(WidthsAndHeigths.get(ParkingLots_List.getSelectedIndex())[1]);
@@ -312,34 +358,45 @@ ActionListener ParkingCarListener = new ActionListener() {
             }
 
         }
-        buttonSets.add(new JButton[parkingHeigth][parkingWidth]);
+//        buttonSets.clear();
+        int undex;
+        if (ParkingLots_List.getModel().getSize()!=0) {
+            undex = ParkingLots_List.getSelectedIndex();
+        } else {
+            undex=buttonSets.size() - 1;
+        }
+
         for (int i = 0; i < parkingHeigth; i++) {
             for (int j = 0; j < parkingWidth; j++) {
-                buttonSets.get(buttonSets.size() - 1)[i][j] = new JButton(placeNumber + "");
+                buttonSets.get(undex)[i][j] = new JButton(placeNumber + "");
                 placeNumber++;
-                CarPLaces_jPanel.add(buttonSets.get(buttonSets.size() - 1)[i][j]);
-                buttonSets.get(buttonSets.size() - 1)[i][j].setVisible(true);
-                buttonSets.get(buttonSets.size() - 1)[i][j].setSize(50, 50);
-                buttonSets.get(buttonSets.size() - 1)[i][j].setForeground(Color.GREEN);
-                buttonSets.get(buttonSets.size() - 1)[i][j].setLocation(buttonSets.get(buttonSets.size() - 1)[i][j].getWidth() * i, buttonSets.get(buttonSets.size() - 1)[i][j].getHeight() * j);
-                buttonSets.get(buttonSets.size() - 1)[i][j].addActionListener(ParkingCarListener);
+                CarPLaces_jPanel.add(buttonSets.get(undex)[i][j]);
+                buttonSets.get(undex)[i][j].setVisible(true);
+                buttonSets.get(undex)[i][j].setSize(50, 50);
+                buttonSets.get(undex)[i][j].setForeground(Color.GREEN);
+                buttonSets.get(undex)[i][j].setLocation(buttonSets.get(undex)[i][j].getWidth() * i, buttonSets.get(undex)[i][j].getHeight() * j);
+                buttonSets.get(undex)[i][j].addActionListener(ParkingCarListener);
 
             }
         }
+        if (ListOfParking.size() > 0) {
+            var cars = ListOfParking.get(ParkingLots_List.getSelectedIndex()).TerminalSession().GetAllCars();
+            
+            for (ParkingSet car : cars) {
+                if (car.Sector == CurrentSectorGlobalName && car.parkingName==SelectParkingName) {
 
-        for (int i = 0; i < parkingHeigth; i++) {
-            for (int j = 0; j < parkingWidth; j++) {
-                if(RegistrationWindow.ParkedCars.containsKey( buttonSets.get(buttonSets.size() - 1)[i][j].getText()) )
-                {
-                              buttonSets.get(buttonSets.size() - 1)[i][j].setForeground(Color.RED);
+                    for (int i = 0; i < parkingHeigth; i++) {
+                        for (int j = 0; j < parkingWidth; j++) {
+                            if (car.SectorNumber == Integer.parseInt(buttonSets.get(undex)[i][j].getText())) {
+                                buttonSets.get(undex)[i][j].setForeground(Color.RED);
+                            }
+                        }
+                    }
+
                 }
-
-              //var d =  Parking.getSectorsSquere().get(0);
-
-                    
-                 
             }
         }
+
     }
 
     /**

@@ -6,8 +6,10 @@ public class ParkingSet {
     Car car;
     ParkingTime timeInterval;
     Integer cost;
+    String parkingName;
 
-    public ParkingSet(Character Sector, Integer SectorNumber, Car car, ParkingTime time) {
+    public ParkingSet(String parkingName,Character Sector, Integer SectorNumber, Car car, ParkingTime time) {
+        this.parkingName=parkingName;
         this.Sector = Sector;
         this.SectorNumber = SectorNumber;
         this.timeInterval=time;

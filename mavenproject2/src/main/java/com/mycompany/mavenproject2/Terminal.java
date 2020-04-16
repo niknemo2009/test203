@@ -20,12 +20,12 @@ public class Terminal {
         return rate;
     }
 
-    public HashMap<Integer, Integer> RegisterNewCar(Character SectorName, int NumberAtSector, Car car, ParkingTime timeInterval, String OwnerName) {
+    public HashMap<Integer, Integer> RegisterNewCar(String ParkingNmae,Character SectorName, int NumberAtSector, Car car, ParkingTime timeInterval, String OwnerName) {
         var sector = GetSectorByName(SectorName);
         if (sector != null) {
             Integer nextQueueNumber = rnd.nextInt(10000);
             sector.SetParkingPlace(NumberAtSector, car, timeInterval);
-            activeCarsSets.put(nextQueueNumber, new ParkingSet(SectorName, NumberAtSector, car, timeInterval));
+            activeCarsSets.put(nextQueueNumber, new ParkingSet(ParkingNmae,SectorName, NumberAtSector, car, timeInterval));
             if (Owners.containsKey(OwnerName)) {
                 Owners.get(OwnerName).add(nextQueueNumber);
             } else {
@@ -52,6 +52,10 @@ public class Terminal {
         }
         return CarsSet;
 
+    }
+    public Collection<ParkingSet> GetAllCars()
+    {
+        return activeCarsSets.values();
     }
 
     public List<ParkingSet> GetReportForPeriod(ParkingTime timePeriod) {

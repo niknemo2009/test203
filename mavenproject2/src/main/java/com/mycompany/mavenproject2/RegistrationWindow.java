@@ -30,7 +30,7 @@ public class RegistrationWindow extends javax.swing.JFrame {
             ParkingSector_ComboBox.addItem(Character.toString(c));
             c++;
         }
-
+ParkingSector_ComboBox.setSelectedIndex(mainForm.CurrentSectorGlobalCounter);
 
     }
 

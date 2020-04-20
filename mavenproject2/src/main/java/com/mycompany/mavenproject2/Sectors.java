@@ -22,8 +22,9 @@ public class Sectors {
 //        return carsUseMask[index];
 //    }
     public boolean SetParkingPlace(int index, Car carModel, ParkingTime parkingTime) {
-        int rowIndex=(int)((index/carCount)+(index%carCount-1));
+        int rowIndex=(int)((index/carCount)+(index%carCount));
         int columnIndex=((int)(index%carCount));
+        
         for (int i = 1; i <= carModel.CarSize; i++) {
             if (carsUseMask[rowIndex][columnIndex] == 0)
 //                    && index + i < carsUseMask.length && index + i < carsUseMask[index].length
@@ -43,7 +44,7 @@ public class Sectors {
     }
 
     public void Rebuild(Integer carCount) {
-        this.carCount=carCount;
+        this.carCount=carCount*5;
         carsUseMask = new Integer[carCount][carCount];
         for(int i = 0; i < carsUseMask.length; ++i)
     for(int j = 0; j < carsUseMask[i].length; ++j)

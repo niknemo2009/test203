@@ -21,7 +21,7 @@ public class Parking {
         if (sectorsCount < maxSectors && carPerSector > 0) {
             
             for (int i = 0; i < sectorsSquere.size(); i++) {
-                sectorsSquere.get(i).Rebuild(carPerSector);
+                sectorsSquere.get(i).Rebuild(carPerSector*carPerSector*ParkObj_sectorCount  );
             }
         } else {
             throw new Exception();

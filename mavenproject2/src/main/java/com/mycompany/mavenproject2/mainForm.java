@@ -38,7 +38,7 @@ public class mainForm extends javax.swing.JFrame {
     List<JButton[][]> buttonSets;
     List<String[]> WidthsAndHeigths;
     char CurrentSectorGlobalName;
-    int CurrentSectorGlobalCounter;
+   public  static int CurrentSectorGlobalCounter;
     int ParkingSectorCount = 1;
 
     public mainForm() {
@@ -333,9 +333,10 @@ ActionListener ParkingCarListener = new ActionListener() {
     }//GEN-LAST:event_PreviousSector_ButtonActionPerformed
 
     private void RedrawParking(Boolean flag) {
-        int placeNumber = 1;
+        
         int parkingHeigth;
         int parkingWidth;
+       
         CarPLaces_jPanel.removeAll();
         CarPLaces_jPanel.repaint();
         if (flag) {
@@ -343,7 +344,7 @@ ActionListener ParkingCarListener = new ActionListener() {
             parkingWidth = Integer.parseInt(ParkingSize_TextField.getText());
             parkingHeigth = parkingWidth;
             ParkingGlobalSectorName = ParkingName_TextF.getText();
-            buttonSets.add(new JButton[parkingHeigth][parkingWidth]);
+            buttonSets.add(new JButton[parkingHeigth*ParkingSectorCount][parkingWidth*ParkingSectorCount]);
         } else {
             SelectingParkingIndex = ParkingLots_List.getSelectedIndex();
             parkingHeigth = Integer.parseInt(WidthsAndHeigths.get(ParkingLots_List.getSelectedIndex())[1]);
@@ -365,7 +366,7 @@ ActionListener ParkingCarListener = new ActionListener() {
         } else {
             undex=buttonSets.size() - 1;
         }
-
+ int placeNumber = (parkingWidth*parkingWidth*CurrentSectorGlobalCounter);
         for (int i = 0; i < parkingHeigth; i++) {
             for (int j = 0; j < parkingWidth; j++) {
                 buttonSets.get(undex)[i][j] = new JButton(placeNumber + "");
@@ -384,9 +385,16 @@ ActionListener ParkingCarListener = new ActionListener() {
             
             for (ParkingSet car : cars) {
                 if (car.Sector == CurrentSectorGlobalName && car.parkingName==SelectParkingName) {
-
-                    for (int i = 0; i < parkingHeigth; i++) {
-                        for (int j = 0; j < parkingWidth; j++) {
+                     int tmpCoefficent;
+                     if(CurrentSectorGlobalCounter==0)
+                     {
+                        tmpCoefficent =CurrentSectorGlobalCounter+1;
+                     }
+                     else{
+                          tmpCoefficent =CurrentSectorGlobalCounter;
+                     }
+                    for (int i = 0; i < parkingHeigth*(tmpCoefficent); i++) {
+                        for (int j = 0; j < parkingWidth*(tmpCoefficent); j++) {
                             if (car.SectorNumber == Integer.parseInt(buttonSets.get(undex)[i][j].getText())) {
                                 buttonSets.get(undex)[i][j].setForeground(Color.RED);
                             }

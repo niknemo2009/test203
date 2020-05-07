@@ -27,9 +27,9 @@ class Example1Test {
 
 
         assertAll(
-                ()->assertIterableEquals(new ArrayList<>(),ex1.maxLetterGolosn(arr)),
-                ()->assertIterableEquals(new ArrayList<>(),ex1.maxLetterGolosn(arr1)),
-                ()->assertIterableEquals(new ArrayList<>(),ex1.maxLetterGolosn(arr2))
+                ()->assertIterableEquals(expResult1,ex1.getWordWithMaxCountGolosn(arr)),
+                ()->assertIterableEquals(expResult1,ex1.getWordWithMaxCountGolosn(arr1)),
+                ()->assertIterableEquals(expResult2,ex1.getWordWithMaxCountGolosn(arr2))
 
 
         );

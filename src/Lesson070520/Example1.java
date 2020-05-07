@@ -18,26 +18,27 @@ Consumer<String>  lam2=q->{
         Supplier<String>  lam4=()->"qwqwqwq";
 
         String[] arr={"qazerty","eerty","edrfyuio"};
+        String[]  arr2={"qwes","wsax","qsybnm"};
         Example1 ex1=new Example1();
-        System.out.println(ex1.maxLetterGolosn(arr));
+        System.out.println(ex1.getWordWithMaxCountGolosn(arr2));
         System.out.println( "qwe".indexOf("q"));
     }
 
-    List<String> maxLetterGolosn(String[] arr){
+    List<String> getWordWithMaxCountGolosn(String[] arr){
         List<String> result=new ArrayList<>();
         String etalon="eyuioa";
         int[] calcLetter=Arrays.stream(arr).mapToInt(w->{
             int counter=0;
-            for(String temp:w.split("")){
-                if(etalon.indexOf(temp)!=-1){
+            for (String temp : w.split("")) {
+                if (etalon.indexOf(temp) != -1) {
                     counter++;
                 }
             }
             return counter;
         }).toArray();
         int[] mass=Arrays.stream(calcLetter).distinct().sorted().toArray();
-        if(mass[0]!=0&& mass.length>1){
-            List<Integer>  list=findAllIndex(calcLetter);
+        if(mass.length>=1 && mass[0]!=0 ){
+            List<Integer>  list=findAllIndexOfWords(calcLetter);
             for (int temp:list ) {
                 result.add(arr[temp]);
             }
@@ -46,7 +47,7 @@ Consumer<String>  lam2=q->{
         return result;
     }
 
-    private List<Integer> findAllIndex(int[] mass) {
+    private List<Integer> findAllIndexOfWords(int[] mass) {
         List<Integer> result=new ArrayList<>();
         int max=Arrays.stream(mass).max().getAsInt();
         for(int i=0;i<mass.length;i++){

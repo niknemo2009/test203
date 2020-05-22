@@ -13,6 +13,12 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -33,13 +39,15 @@ public class mainForm extends javax.swing.JFrame {
     public static String PushedButtonText;
     public static RegistrationWindow Registration_window;
     public static JButton PushedButton;
-    public  static String SelectParkingName;
+    public static String SelectParkingName;
     DefaultListModel model;
     List<JButton[][]> buttonSets;
     List<String[]> WidthsAndHeigths;
     char CurrentSectorGlobalName;
-   public  static int CurrentSectorGlobalCounter;
+    public static int CurrentSectorGlobalCounter;
     int ParkingSectorCount = 1;
+    int CurretParkingSize = 1;
+    public static Connection connection;
 
     public mainForm() {
         initComponents();
@@ -51,6 +59,18 @@ public class mainForm extends javax.swing.JFrame {
         NextSecror_Button.setVisible(false);
         CurrentSectorGlobalName = 'A';
         CurrentSectorGlobalCounter = 0;
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/parking?serverTimezone=Europe/Moscow&useSSL=false&allowPublicKeyRetrieval=true",
+                    "root", "123abc");
+            GetDataFromDB();
+
+        } catch (Exception e) {
+            System.out.println(e.toString());
+
+        }
+
     }
 
     /**
@@ -278,13 +298,21 @@ ActionListener ParkingCarListener = new ActionListener() {
                         if (ParkingSectorCount > 1) {
                             NextSecror_Button.setVisible(true);
                         }
-                        RedrawParking(true);
+                        RedrawParking(true, false);
 
                         ListOfParking.add(ListOfParking.size(), new Parking(ParkingSectorCount, Integer.parseInt(parkingHeigth)));
                         model.add(model.size(), parkingName);
 
                         ParkingLots_List.setModel(model);
                         ParkingLots_List.setSelectedIndex(model.size() - 1);
+
+                        //DB
+                        PreparedStatement preparedStmt = connection.prepareStatement("insert into parkinginfo (ParkingName,SectorCount,ParkingSize) values (?, ?, ?)");
+                        preparedStmt.setString(1, parkingName);
+                        preparedStmt.setInt(2, ParkingSectorCount);
+                        preparedStmt.setInt(3, Integer.parseInt(parkingHeigth));
+                        //
+                        preparedStmt.execute();
                     } else {
                         CurrentParkingInfo_TextArea.append("\nParking already built");
                     }
@@ -296,15 +324,15 @@ ActionListener ParkingCarListener = new ActionListener() {
             }
 
         } catch (Exception ex) {
-            System.out.println("something wrong");
+            System.out.println("something wrong\n" + ex.getMessage());
         }
     }//GEN-LAST:event_CreateParking_jButtonActionPerformed
 
     private void ParkingLots_ListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ParkingLots_ListMouseClicked
         // CurrentParkingInfo_TextArea.append("\n"+ ParkingLots_List.getSelectedIndex());
-           SelectParkingName = ParkingLots_List.getSelectedValue();
-        RedrawParking(false);
-     
+        SelectParkingName = ParkingLots_List.getSelectedValue();
+        RedrawParking(false, false);
+
     }//GEN-LAST:event_ParkingLots_ListMouseClicked
 
     private void NextSecror_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NextSecror_ButtonActionPerformed
@@ -316,7 +344,7 @@ ActionListener ParkingCarListener = new ActionListener() {
         }
 
         PreviousSector_Button.setVisible(true);
-        RedrawParking(false);
+        RedrawParking(false, false);
 
     }//GEN-LAST:event_NextSecror_ButtonActionPerformed
 
@@ -329,22 +357,65 @@ ActionListener ParkingCarListener = new ActionListener() {
             PreviousSector_Button.setVisible(false);
         }
         NextSecror_Button.setVisible(true);
-        RedrawParking(false);
+        RedrawParking(false, false);
     }//GEN-LAST:event_PreviousSector_ButtonActionPerformed
 
-    private void RedrawParking(Boolean flag) {
-        
+    private void RedrawParking(Boolean NewParkingDraw, Boolean readFromDB) {
+
         int parkingHeigth;
         int parkingWidth;
-       
+
         CarPLaces_jPanel.removeAll();
         CarPLaces_jPanel.repaint();
-        if (flag) {
+        if (NewParkingDraw) {
+            if (readFromDB) {
+                parkingWidth = CurretParkingSize;
+                parkingHeigth = parkingWidth;
+                PreparedStatement preparedSetFromDB;
+            PreparedStatement preparedCarsFromDB;
+                try {
+                    
+                    
+                    preparedSetFromDB = connection.prepareStatement("select * from setsinfo");
+                  preparedCarsFromDB = connection.prepareStatement("select * from carsinfo");
+                 var setResult =  preparedSetFromDB.executeQuery();
+                 var carsResult =  preparedCarsFromDB.executeQuery();
+                 var parking1 = mainForm.ListOfParking.get(mainForm.SelectingParkingIndex);
+                 setResult.last();
+                int size = setResult.getRow();
+               setResult.first();
+               carsResult.first();
+                   for(int i=0;i<size;i++)  {
+                     
 
-            parkingWidth = Integer.parseInt(ParkingSize_TextField.getText());
-            parkingHeigth = parkingWidth;
+                      
+                      var place2 = parking1.TerminalSession().RegisterNewCar(setResult.getString("ParkingName"),
+                    setResult.getString("Sector").charAt(0),
+                    setResult.getInt("SectorNumber"),
+                    new Car(carsResult.getString("CarName"),
+                           carsResult.getInt("CarSize")),
+                    new ParkingTime(setResult.getString("ParkingStartTime"),
+                            setResult.getString("ParkingStopTime")),
+                     setResult.getString("CarOwner"));
+            
+                      
+                         Registration_window. ParkedCars.put(setResult.getString("SectorNumber"), place2);
+                      
+                     setResult.next();
+               carsResult.next();
+                }
+                    
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+                  
+            } else {
+                parkingWidth = Integer.parseInt(ParkingSize_TextField.getText());
+                parkingHeigth = parkingWidth;
+            }
+
             ParkingGlobalSectorName = ParkingName_TextF.getText();
-            buttonSets.add(new JButton[parkingHeigth*ParkingSectorCount][parkingWidth*ParkingSectorCount]);
+            buttonSets.add(new JButton[parkingHeigth * ParkingSectorCount][parkingWidth * ParkingSectorCount]);
         } else {
             SelectingParkingIndex = ParkingLots_List.getSelectedIndex();
             parkingHeigth = Integer.parseInt(WidthsAndHeigths.get(ParkingLots_List.getSelectedIndex())[1]);
@@ -361,12 +432,12 @@ ActionListener ParkingCarListener = new ActionListener() {
         }
 //        buttonSets.clear();
         int undex;
-        if (ParkingLots_List.getModel().getSize()!=0) {
+        if (ParkingLots_List.getModel().getSize() != 0) {
             undex = ParkingLots_List.getSelectedIndex();
         } else {
-            undex=buttonSets.size() - 1;
+            undex = buttonSets.size() - 1;
         }
- int placeNumber = (parkingWidth*parkingWidth*CurrentSectorGlobalCounter);
+        int placeNumber = (parkingWidth * parkingWidth * CurrentSectorGlobalCounter);
         for (int i = 0; i < parkingHeigth; i++) {
             for (int j = 0; j < parkingWidth; j++) {
                 buttonSets.get(undex)[i][j] = new JButton(placeNumber + "");
@@ -377,24 +448,63 @@ ActionListener ParkingCarListener = new ActionListener() {
                 buttonSets.get(undex)[i][j].setForeground(Color.GREEN);
                 buttonSets.get(undex)[i][j].setLocation(buttonSets.get(undex)[i][j].getWidth() * i, buttonSets.get(undex)[i][j].getHeight() * j);
                 buttonSets.get(undex)[i][j].addActionListener(ParkingCarListener);
+                      //        int ButtonN = (Integer) Registration_window. ParkedCars.get(buttonSets.get(undex)[i][j].getText()).values().toArray()[0];
 
             }
         }
         if (ListOfParking.size() > 0) {
-            var cars = ListOfParking.get(ParkingLots_List.getSelectedIndex()).TerminalSession().GetAllCars();
-            
+            Collection<ParkingSet> cars = null;
+            if (readFromDB) {
+                try {
+
+                    PreparedStatement preparedSetInfoQuery = connection.prepareStatement("SELECT * FROM setsinfo");
+             ResultSet  resultsSets = preparedSetInfoQuery.executeQuery();
+             PreparedStatement preparedCarSetQuery = connection.prepareStatement("SELECT * FROM carsinfo");
+             ResultSet  resultsCarSets = preparedCarSetQuery.executeQuery();
+             resultsSets.last();
+             cars = new LinkedList<ParkingSet>();
+                    if (resultsCarSets!=null && resultsSets!=null ) {
+                         int size = resultsSets.getRow();
+                         resultsSets.first();
+                         resultsCarSets.first();
+                   for(int i=0;i<size;i++) {
+                      
+                         var d =  new ParkingSet(resultsSets.getString("ParkingName"), resultsSets.getString("Sector").charAt(0), resultsSets.getInt("SectorNumber"),
+                                 new Car(resultsCarSets.getString("CarName"),resultsCarSets.getInt("CarSize")),new ParkingTime(resultsSets.getString("ParkingStartTime"),
+                                 resultsSets.getString("ParkingStopTime")));
+                     
+                        
+                     cars.add(d);
+                      resultsSets.next();
+                       resultsCarSets.next();
+                 
+                
+                     
+                    // cars.add()
+              //cars.add( );
+                    }
+                    
+                    }
+               
+                    
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+
+            } else {
+                cars = ListOfParking.get(ParkingLots_List.getSelectedIndex()).TerminalSession().GetAllCars();
+            }
+
             for (ParkingSet car : cars) {
-                if (car.Sector == CurrentSectorGlobalName && car.parkingName==SelectParkingName) {
-                     int tmpCoefficent;
-                     if(CurrentSectorGlobalCounter==0)
-                     {
-                        tmpCoefficent =CurrentSectorGlobalCounter+1;
-                     }
-                     else{
-                          tmpCoefficent =CurrentSectorGlobalCounter;
-                     }
-                    for (int i = 0; i < parkingHeigth*(tmpCoefficent); i++) {
-                        for (int j = 0; j < parkingWidth*(tmpCoefficent); j++) {
+                if (car.Sector == CurrentSectorGlobalName && car.parkingName.equals( SelectParkingName)) {
+                    int tmpCoefficent;
+                    if (CurrentSectorGlobalCounter == 0) {
+                        tmpCoefficent = CurrentSectorGlobalCounter + 1;
+                    } else {
+                        tmpCoefficent = CurrentSectorGlobalCounter;
+                    }
+                    for (int i = 0; i < parkingHeigth * (tmpCoefficent); i++) {
+                        for (int j = 0; j < parkingWidth * (tmpCoefficent); j++) {
                             if (car.SectorNumber == Integer.parseInt(buttonSets.get(undex)[i][j].getText())) {
                                 buttonSets.get(undex)[i][j].setForeground(Color.RED);
                             }
@@ -458,4 +568,43 @@ ActionListener ParkingCarListener = new ActionListener() {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
+
+    private void GetDataFromDB() {
+
+        try {
+            PreparedStatement preparedNameQuery = connection.prepareStatement("SELECT * FROM parkinginfo");
+            ResultSet resultsName = preparedNameQuery.executeQuery();
+
+            if (resultsName != null) {
+                resultsName.last();
+                int size = resultsName.getRow();
+                resultsName.first();
+                for (int i = 0; i < size; i++) {
+                    WidthsAndHeigths.add(new String[2]);
+                    WidthsAndHeigths.get(WidthsAndHeigths.size() - 1)[0] = resultsName.getString("ParkingSize");
+                    WidthsAndHeigths.get(WidthsAndHeigths.size() - 1)[1] = resultsName.getString("ParkingSize");
+//                        
+//                        
+                    ParkingSectorCount = resultsName.getInt("SectorCount");
+                    if (ParkingSectorCount > 1) {
+                        NextSecror_Button.setVisible(true);
+                    }
+
+                    CurretParkingSize = Integer.parseInt(resultsName.getString("ParkingSize"));
+                    ListOfParking.add(ListOfParking.size(), new Parking(ParkingSectorCount, CurretParkingSize));
+                    model.add(model.size(), resultsName.getString("ParkingName"));
+SelectParkingName=resultsName.getString("ParkingName");
+                    ParkingLots_List.setModel(model);
+                    ParkingLots_List.setSelectedIndex(model.size() - 1);
+                    resultsName.next();
+                       RedrawParking(true, true);
+                }
+             
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
 }

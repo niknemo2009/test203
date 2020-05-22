@@ -1,9 +1,14 @@
 package com.mycompany.mavenproject2;
 
+import static com.mycompany.mavenproject2.mainForm.connection;
 import java.awt.Color;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFormattedTextField;
 import javax.swing.text.MaskFormatter;
 
@@ -21,16 +26,17 @@ public class RegistrationWindow extends javax.swing.JFrame {
     /**
      * Creates new form RegistrationWindow
      */
-    public static HashMap<String, HashMap<Integer, Integer> > ParkedCars = new HashMap<>();
+    public static HashMap<String, HashMap<Integer, Integer>> ParkedCars = new HashMap<>();
+
     public RegistrationWindow() {
         initComponents();
-        
-        char c ='A';
-        for (int i = 0; i <  mainForm.ListOfParking.get(mainForm.SelectingParkingIndex).ParkObj_sectorCount; ++i) {
+
+        char c = 'A';
+        for (int i = 0; i < mainForm.ListOfParking.get(mainForm.SelectingParkingIndex).ParkObj_sectorCount; ++i) {
             ParkingSector_ComboBox.addItem(Character.toString(c));
             c++;
         }
-ParkingSector_ComboBox.setSelectedIndex(mainForm.CurrentSectorGlobalCounter);
+        ParkingSector_ComboBox.setSelectedIndex(mainForm.CurrentSectorGlobalCounter);
 
     }
 
@@ -341,29 +347,60 @@ ParkingSector_ComboBox.setSelectedIndex(mainForm.CurrentSectorGlobalCounter);
     }//GEN-LAST:event_CarModel_ComboBoxActionPerformed
 
     private void RegistrNewCar_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegistrNewCar_ButtonActionPerformed
+        ParkingSet infoSet = null;
         if (ModelCorr_CheckBox.isSelected() && StartDateCorr_CheckBox.isSelected()
                 && StopDateCorr_CheckBox.isSelected() && OwnerCorr_CheckBox.isSelected()) {
             var parking1 = mainForm.ListOfParking.get(mainForm.SelectingParkingIndex);
-           
-            var place1 = parking1.TerminalSession().RegisterNewCar(mainForm.SelectParkingName ,
+
+            var place1 = parking1.TerminalSession().RegisterNewCar(mainForm.SelectParkingName,
                     ParkingSector_ComboBox.getSelectedItem().toString().charAt(0),
-                    Integer.parseInt( mainForm.PushedButtonText),
-                    new Car(CarModel_ComboBox.getSelectedItem().toString(), 
-                            (Integer)ParkingSpace_Spinner.getValue()), 
-                    new ParkingTime(StartD_FormattedTextField.getText(), 
-                            StopD_FormattedTextField.getText()), 
-                    OwnerName_TextField.getText()+" "+OwnerSuname_TextField.getText()
+                    Integer.parseInt(mainForm.PushedButtonText),
+                    new Car(CarModel_ComboBox.getSelectedItem().toString(),
+                            (Integer) ParkingSpace_Spinner.getValue()),
+                    new ParkingTime(StartD_FormattedTextField.getText(),
+                            StopD_FormattedTextField.getText()),
+                    OwnerName_TextField.getText() + " " + OwnerSuname_TextField.getText()
             );
-             ParkedCars.put(mainForm.PushedButtonText,place1 );
+            ParkedCars.put(mainForm.PushedButtonText, place1);
+            int CarDequenumber = (Integer) place1.values().toArray()[place1.values().size() - 1];
+            if (CarDequenumber != -1) {
 
-              if ((Integer)place1.values().toArray()[place1.values().size()-1]!=-1) {
-
-                var d = parking1.TerminalSession().GetCarData((Integer) place1.values().toArray()[place1.values().size()-1]);
-                Info_TextArea.append("\nparking cost for the selected period " + d.cost);
+                infoSet = parking1.TerminalSession().GetCarData((Integer) place1.values().toArray()[place1.values().size() - 1]);
+                Info_TextArea.append("\nparking cost for the selected period " + infoSet.cost);
                 Finish_Button.setEnabled(true);
             }
 
+            PreparedStatement preparedSetInfo;
+            PreparedStatement preparedCarInfo;
+            
+            try {
+                preparedSetInfo = connection.prepareStatement("insert into setsinfo (Sector,SectorNumber,ParkingStartTime,ParkingStopTime,ParkingCost,ParkingName,CarDequeNumber,CarOwner)"
+                        + "values (?, ?, ?,?,?,?,?,?)");
+                preparedSetInfo.setString(1, ParkingSector_ComboBox.getSelectedItem().toString().charAt(0) + "");
+                preparedSetInfo.setInt(2, infoSet.SectorNumber);
+                preparedSetInfo.setString(3, StartD_FormattedTextField.getText());
+                preparedSetInfo.setString(4, StopD_FormattedTextField.getText());
+                preparedSetInfo.setString(5, infoSet.cost + "");
+                preparedSetInfo.setString(6, mainForm.SelectParkingName);
+                preparedSetInfo.setString(7, CarDequenumber + "");
+                preparedSetInfo.setString(8, OwnerName_TextField.getText() + " " + OwnerSuname_TextField.getText());
+                preparedSetInfo.execute();
+
+                preparedCarInfo = connection.prepareStatement("insert into carsinfo (CarName,CarSize,DequeNumber) values(?,?,?)");
+                preparedCarInfo.setString(1, CarModel_ComboBox.getSelectedItem().toString());
+                preparedCarInfo.setInt(2, (Integer) ParkingSpace_Spinner.getValue());
+                preparedCarInfo.setInt(3, CarDequenumber);
+                preparedCarInfo.execute();
+                
+                
+                
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+
         }
+        //DB
+
     }//GEN-LAST:event_RegistrNewCar_ButtonActionPerformed
 
     private void StartD_FormattedTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_StartD_FormattedTextFieldKeyReleased
@@ -427,8 +464,9 @@ ParkingSector_ComboBox.setSelectedIndex(mainForm.CurrentSectorGlobalCounter);
     }//GEN-LAST:event_OwnerSuname_TextFieldFocusLost
 
     private void Finish_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Finish_ButtonActionPerformed
-       mainForm.Registration_window.dispose();
-       mainForm.PushedButton.setForeground(Color.red);
+        mainForm.Registration_window.dispose();
+        mainForm.PushedButton.setForeground(Color.red);
+
     }//GEN-LAST:event_Finish_ButtonActionPerformed
 
     /**

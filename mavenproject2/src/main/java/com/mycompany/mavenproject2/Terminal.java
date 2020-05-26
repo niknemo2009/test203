@@ -13,6 +13,8 @@ public class Terminal {
     private static Map<String, List<Integer>> Owners = new HashMap<>();
 
     public static Map<String, List<Integer>> getOwners() {
+        TestsForParking test = new TestsForParking();
+        test.testOwnersCorrect(Owners);
         return Owners;
     }
 

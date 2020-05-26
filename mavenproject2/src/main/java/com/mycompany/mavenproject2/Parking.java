@@ -10,6 +10,9 @@ public class Parking {
     int ParkObj_sectorCount;
 
     public static List<Sectors> getSectorsSquere() {
+        TestsForParking test = new TestsForParking();
+        test.testSectorsSquareListEmpty(sectorsSquere);
+        test.testSectorsSquareListOversize(sectorsSquere);
         return sectorsSquere;
     }
 

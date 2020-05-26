@@ -15,6 +15,8 @@ public class Sectors {
     }
 
     public Character getSectorName() {
+         TestsForParking test = new TestsForParking();
+         test.testSectorNameValid(currSectorName);
         return currSectorName;
     }
 

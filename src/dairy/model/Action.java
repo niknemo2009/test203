@@ -39,13 +39,13 @@ public class Action implements Cloneable{
         }
     }
 
-//    public void removeAction(int index)
-//    {
-//        Action action = new Action();
-//        Target target = new Target();
-//        action.getActionsUniqueArrayList().remove(index);
-//        for (int i = 0; i < target.getTargetsCoefficients().size(); i++) {
-//            target.getTargetsCoefficients().get(i).remove(index);
-//        }
-//    }
+    public void removeAction(int index)
+    {
+        Action action = new Action();
+        Target target = new Target();
+        action.getActionsArrayList().remove(index);
+        for (int i = 0; i < target.getTargetsCoefficients().size(); i++) {
+            target.getTargetsCoefficients().get(i).remove(index);
+        }
+    }
 }

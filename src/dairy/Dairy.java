@@ -12,7 +12,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import java.time.LocalDate;
 
 public class Dairy extends Application {
     private static String URL_DB = ".\\src\\dairy\\resources\\dairy.db";
@@ -45,12 +44,13 @@ public class Dairy extends Application {
         actionDao.select();
         recordDao.select();
         dairyDao.openDB();
-        targetDao.insertTarget("sample_target_1", 200);
+        //targetDao.insertTarget("sample_target_1", 200);
         loadDairy(primaryStage);
         //dairyDao.clearDB();
     }
 
     public static void main(String[] args) {
+
 //        Target target = new Target();
 //        target.addTarget("Отдых",360);
 //        target.addTarget("Чтение",240);
@@ -62,6 +62,7 @@ public class Dairy extends Application {
 //        new Record(action.getActionsArrayList().get(0).getActionName(), 80, LocalDate.now());
 //        new Record(action.getActionsArrayList().get(1).getActionName(),120,LocalDate.of(2020,3,15));
 //        new Record(action.getActionsArrayList().get(2).getActionName(),90,LocalDate.of(2020,3,12));
+
         launch(args);
     }
 }

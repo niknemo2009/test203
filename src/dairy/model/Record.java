@@ -59,7 +59,7 @@ public class Record {
         }
     }
 
-    public Action findByName(String actionName){
+    private Action findByName(String actionName){
         Action action = new Action();
         List<Action> result=action.getActionsArrayList().stream().filter(r->r.getActionName().equals(actionName)).collect(Collectors.toList());
         return result.get(0);
@@ -74,6 +74,7 @@ public class Record {
                 if (journal.get(j).getRecordDate().getDayOfYear()==i)
                 {
                     result += record.getJournal().get(j).getRecordDate()+" ";
+                    result += record.getJournal().get(j).getRecordName()+" ";
                     result += record.getJournal().get(j).getRecordDuration()+" minutes\n";
                 }
             }

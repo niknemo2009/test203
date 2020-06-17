@@ -1,13 +1,17 @@
 package lab3;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class Goals {
+public class Goals implements Comparable<Goals>{
     String goal;
     ArrayList<Actions> act = new ArrayList<>();
+    static ArrayList<Goals> goalsList = new ArrayList<>();
 
     public Goals(String goal) {
         this.goal = goal;
+        goalsList.add(this);
     }
 
     public void add_action(Actions... a)
@@ -18,6 +22,11 @@ public class Goals {
         }
     }
 
+    public void edit_action(int index, Actions edited)
+    {
+        act.set(index, edited);
+    }
+
     public void remove_action(Actions... a)
     {
         for(Actions i : a)
@@ -25,6 +34,24 @@ public class Goals {
             act.remove(i);
         }
     }
+
+    public void countPeriodTime(LocalDate start, LocalDate end)
+    {
+        LocalDate resultDate = end;
+        int years = 0;
+        int months = 0;
+        if(start.getYear() == end.getYear())
+        {
+            months = end.getMonthValue() - start.getMonthValue();
+            System.out.println("You`ll need " + months + " monts to complete your goal");
+        }
+        else
+        {
+            years = end.getYear() - start.getYear();
+            System.out.println("You`ll need " + years + " year to complete your goal");
+        }
+    }
+
 
     public void show_goal_actions()
     {
@@ -40,9 +67,9 @@ public class Goals {
         }
     }
 
-    public double count_time()
+    public int count_time()
     {
-        double sum = 0;
+        int sum = 0;
         for (Actions i : act)
         {
             sum += i.getTime();
@@ -56,5 +83,10 @@ public class Goals {
         return "Goals{" +
                 "goal='" + goal + '\'' +
                 '}';
+    }
+
+    public int compareTo(Goals g)
+    {
+        return this.goal.compareTo(g.goal);
     }
 }

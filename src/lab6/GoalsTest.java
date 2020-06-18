@@ -1,15 +1,11 @@
 package lab6;
 
 import org.junit.*;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDate;
@@ -17,12 +13,22 @@ import java.time.LocalDate;
 public class GoalsTest {
 
     @ParameterizedTest
+    @DisplayName("value source test")
     @ValueSource(ints = {1, 3, 5, -3, 15, Integer.MAX_VALUE})
     void isOdd_ShouldReturnTrueForOddNumbers(int number) {
         Assert.assertTrue(Numbers.isOdd(number));
     }
 
+    @ParameterizedTest
+    @DisplayName("Csv source test")
+    @CsvSource({"test,TEST", "tEst,TEST", "Java,JAVA"})
+    void toUpperCase(String input, String expected) {
+        String actualValue = input.toUpperCase();
+        Assert.assertEquals(expected, actualValue);
+    }
+
     @Test
+    @DisplayName("Adding an action test")
     public void testAdding()
     {
         Goals g = new Goals("g1");
@@ -33,6 +39,7 @@ public class GoalsTest {
     }
 
     @Test
+    @DisplayName("Remove an action test")
     public void testRemove()
     {
         Goals g = new Goals("g1");
@@ -46,6 +53,7 @@ public class GoalsTest {
     }
 
     @Test
+    @DisplayName("Count goal time test")
     void testCount()
     {
         Goals g = new Goals("g1");
